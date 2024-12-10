@@ -61,7 +61,6 @@ function second(inputString: string) {
         // we reached the start of the file at the end
         let spaceCounter = 0;
         let isSpaceInFront = true;
-        í;
         for (let j = 0; j <= i + 1; j++) {
           // finding an empty space in the start
           const startNumber = inputArray[j];
