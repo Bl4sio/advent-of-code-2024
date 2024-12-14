@@ -1,6 +1,6 @@
 import * as fs from "fs";
 
-const ID = 11;
+const ID = 13;
 
 const run = async () => {
   const scriptModule = await import(`./solutions/day${ID}`);

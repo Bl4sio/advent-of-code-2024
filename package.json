@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "dependencies": {
+    "decimal.js": "^10.4.3",
     "ts-node-dev": "^2.0.0",
     "tsc": "^2.0.4"
   },
