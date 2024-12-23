@@ -48,8 +48,59 @@ function first(inputString: string) {
   return triplets.size;
 }
 
+type Graph = Map<string, Set<string>>;
+
+function parseInputGraph(inputString: string): Graph {
+  const graph = new Map();
+  inputString.split("\r\n").forEach((pairs) => {
+    const [node1, node2] = pairs.split("-");
+
+    const connections1 = graph.get(node1) ?? new Set();
+    connections1.add(node2);
+    graph.set(node1, connections1);
+
+    const connection2 = graph.get(node2) ?? new Set();
+    connection2.add(node1);
+    graph.set(node2, connection2);
+  });
+
+  return graph;
+}
+
+function bronKerbosch(graph: Graph, R: string[], P: string[], X: string[], results: string[][]): void {
+  if (P.length === 0 && X.length === 0) {
+    results.push([...R]);
+    return;
+  }
+
+  const pivot = P[0] ?? X[0];
+  const pivotNeighbours = graph.get(pivot);
+  if (!pivotNeighbours) throw new Error(`Nincs a gráfban: ${pivot}`);
+
+  for (const v of P.filter((vertex) => !pivotNeighbours.has(vertex))) {
+    const neighbours = graph.get(v);
+    if (!neighbours) throw new Error(`Nincs a gráfban: ${v}`);
+    bronKerbosch(
+      graph,
+      [...R, v],
+      P.filter((vertex) => neighbours.has(vertex)),
+      X.filter((vertex) => neighbours.has(vertex)),
+      results
+    );
+    P = P.filter((vertex) => vertex !== v);
+    X.push(v);
+  }
+}
+
 function second(inputString: string) {
-  const parsed = parseInput(inputString);
+  const graph = parseInputGraph(inputString);
+  const result: string[][] = [];
+  bronKerbosch(graph, [], [...graph.keys()], [], result);
+  result.sort((a, b) => b.length - a.length);
+
+  const biggest = result[0];
+
+  return biggest.sort().join(",");
 }
 
 export default (inputString: string) => {
